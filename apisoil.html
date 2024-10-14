@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Signika:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data Fetch and Display</title>
+
+  <style>
+    body{
+        background-Color : #f3bf58
+    }
+    .first-line {
+      font-size: 34px;
+      position: absolute;
+      top: 15%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      color: black;
+      font-size:  50px;
+      font-family: 'Signika',sans-serif;
+    }
+    .box{
+        margin-top: -15%;
+        margin-left:15%;
+    }
+    .btn{
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: white;
+      color: black;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 5px;
+      font-size: 16px;
+      font-family: 'Signika',sans-serif;
+      transition: background-color 0.3s;
+    }
+    .btn:hover {
+      background-color: #2980b9;
+    }
+    .year{
+      font-size: 25px;
+      position: absolute;
+      top: 45%;
+      left: 15%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      color: black;
+      font-family: 'Signika',sans-serif;
+    }
+    .image-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-left: 1050px;
+      margin-top: 22%;
+    }
+    
+    img {
+      max-width: 300px;
+      height: 275px;
+    }
+
+    
+      .rst {
+        display: inline;
+        padding: 10px 20px;
+        background-color: white;
+        color: black;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin: 5px;
+        font-size: 16px;
+        font-family: 'Signika', sans-serif;
+        transition: background-color 0.3s;
+        position:fixed;
+        top: 92%; 
+        left: 1000px;
+      }
+ 
+    .rst:hover {
+      background-color: #2980b9;
+    }
+    table{
+      margin-top:50px;
+    }
+
+</style>
+
+</head>
+<body>
+    <div class="image-container">
+        <img src="image3.jpg" alt="AgricultureImage">
+    </div>
+    <div>
+        <p class="first-line">Dakshina Kannada's Year-wise Crop Production Statitics</p>
+    </div>
+    <div class="year"> 
+        <span><text color="blue">Select Year </text>:- </span>
+    </div>
+  <div class="box">
+  <button onclick="fetchData(1997)" class="btn">1997</button>
+  <button onclick="fetchData(1998)" class="btn">1998</button>
+  <button onclick="fetchData(1999)" class="btn">1999</button>
+  <button onclick="fetchData(2000)" class="btn">2000</button>
+  <button onclick="fetchData(2001)" class="btn">2001</button>
+  <button onclick="fetchData(2002)" class="btn">2002</button><br>
+  <button onclick="fetchData(2003)" class="btn">2003</button>
+  <button onclick="fetchData(2004)" class="btn">2004</button>
+  <button onclick="fetchData(2005)" class="btn">2005</button>
+  <button onclick="fetchData(2006)" class="btn">2006</button>
+  <button onclick="fetchData(2007)" class="btn">2007</button>
+  <button onclick="fetchData(2008)" class="btn">2008</button><br>
+  <button onclick="fetchData(2009)" class="btn">2009</button>
+  <button onclick="fetchData(2010)" class="btn">2010</button>
+  <button onclick="fetchData(2011)" class="btn">2011</button>
+  <button onclick="fetchData(2012)" class="btn">2012</button>
+  <button onclick="fetchData(2013)" class="btn">2013</button>
+  <button onclick="fetchData(2014)" class="btn">2014</button>
+  </div>
+
+  <div class="rst">
+    <button id="resetButton">Reset</button>
+  </div>
+
+  <table align="center" border="border" cellspacing="0" width="400" height="105" id="agricultural-table">
+    <thead>
+        <tr align="center">
+            <th>Season</th>  
+            <th>Crop</th>
+            <th>Area</th>
+            <th>Production</th>
+        </tr>
+    </thead>
+    <tbody id="table-body">
+        <!-- Data will be inserted here -->
+    </tbody>
+</table>
+
+  <script>
+          
+    async function fetchData(year) {
+        try {
+          
+          const response = await fetch(`https://script.google.com/macros/s/AKfycby7ZrTcmQUSpfVD4UjZAJ-sthhgHoUqQkcmXpCE8-6K-UP8Wgj0I5yqXXoK68AHEzwp0w/exec?action=getUsers&year=${year}`);
+          
+          const data = await response.json();
+          
+
+          var tableBody = document.getElementById("table-body");
+          var rows= tableBody.childNodes;
+          rows.forEach(item=>{
+          tableBody.removeChild(item);
+          });
+
+          data.forEach(item => {
+            
+            if(item.Crop_Year==year){
+            const row = document.createElement('tr');
+
+            const seasonCell = document.createElement('td');
+            const cropCell = document.createElement('td');
+            const areaCell = document.createElement('td');
+            const productionCell = document.createElement('td');
+            
+            seasonCell.textContent = item.Season;
+            cropCell.textContent = item.Crop;
+            areaCell.textContent = item.Area;
+            productionCell.textContent = item.Production;
+            
+            row.appendChild(seasonCell);
+            row.appendChild(cropCell);
+            row.appendChild(areaCell);
+            row.appendChild(productionCell);
+            
+            tableBody.appendChild(row);
+            }
+          });
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", function() {
+        var tableBody = document.getElementById("table-body");
+        if (tableBody) {
+            tableBody.innerHTML = "<table><tr><td></td><td></td><td></td><td></td></tr></table>";
+        } else {
+            console.error("tableBody element not found");
+        }
+    });
+    
+    const resetButton = document.getElementById('resetButton');
+
+    resetButton.addEventListener('click', function() {
+      
+      location.reload();
+    });
+      
+  </script>
+ 
+  <br><br><br>
+</body>
+</html>
